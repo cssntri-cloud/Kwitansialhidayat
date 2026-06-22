@@ -381,7 +381,7 @@
   </div>
 
   <script>
-    const DAFTAR_BULAN_HIJRIYAH = ["Syawal", "Dzulqa'dah", "Dzulhijjah", "Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan"];
+    const DAFTAR_BULAN_HIJRIYAH = ["Syawal", "Dzulqadah", "Dzulhijjah", "Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Syakban", "Ramadhan"];
     let DB_SANTRI = [], DB_BIAYA = [], DB_RIWAYAT = [], ACTIVE_ITEMS_KERANJANG = [], GLOBAL_SELECTED_KWITANSI = null;
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -410,7 +410,7 @@
       let m = Math.floor((24 * l) / 709);
       let d = l - Math.floor((709 * m) / 24);
       let y = 30 * n + j - 30;
-      const hMonths = ["Muharram", "Safar", "Rabi'ul-Awwal", "Rabi'ul-Akhir", "Jumadil-Awwal", "Jumadil-Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulqa'dah", "Dzulhijjah"];
+      const hMonths = ["Muharram", "Safar", "Rabiul-Awwal", "Rabiul-Akhir", "Jumadil-Awwal", "Jumadil-Akhir", "Rajab", "Syakban", "Ramadhan", "Syawal", "Dzulqadah", "Dzulhijjah"];
       return `${d} ${hMonths[m - 1]} ${y} H`;
     }
 
@@ -435,7 +435,7 @@
 
     function migrasiDefaultMasterBiaya() {
       const detailAwalBulanan = DAFTAR_BULAN_HIJRIYAH.map(b => ({
-        bulan: b, nominal: b === "Syawal" || b === "Dzulqa'dah" ? 300000 : (b === "Muharram" ? 350000 : 250000)
+        bulan: b, nominal: b === "Syawal" || b === "Dzulqadah" ? 300000 : (b === "Muharram" ? 350000 : 250000)
       }));
       DB_BIAYA = [
         { id: "B-001", jenis: "PONDOK", kategori: "Syahriah", tipe: "Bulanan", detailBulanan: detailAwalBulanan },
