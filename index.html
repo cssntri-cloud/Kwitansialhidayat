@@ -8,7 +8,9 @@
   <meta name="theme-color" content="#059669">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
@@ -255,10 +257,7 @@
           <span class="material-icons text-sm mr-2">grid_on</span>Cetak Laporan Excel
         </button>
       </div>
-      <div class="bg-red-50 p-4 rounded-xl border border-red-100">
-        <button onclick="clearSemuaDatabase()" class="bg-red-600 text-white text-[11px] px-3 py-2 rounded-lg font-bold w-full">
-          Reset Database Pabrik
-        </button>
+      
       </div>
     </section>
 
@@ -338,29 +337,40 @@
           <p class="text-[10px] mt-0.5">Pembayaran Administrasi</p>
         </div>
         
-        <div class="space-y-0.5 text-[11px] border-b border-dashed border-gray-400 pb-2 mb-2">
-          <div>No Kwitansi: <span id="rec-no" class="font-bold"></span></div>
-          <div>Masehi    : <span id="rec-tgl-m"></span></div>
-          <div>Hijriyah  : <span id="rec-tgl-h" class="font-bold"></span></div>
-          <div>Santri    : <span id="rec-santri" class="font-bold"></span></div>
-          <div>Kamar/Kelas: <span id="rec-kamar-kelas"></span></div>
-        </div>
+        <div class="grid grid-cols-[110px_10px_1fr] text-[11px] gap-y-0.5 border-b border-dashed border-gray-400 pb-2 mb-2">
 
-        <table class="receipt-table mb-2" id="rec-table-matrix">
+  <div>No Kwitansi</div><div>:</div><div id="rec-no" class="font-bold"></div>
+  <div>Masehi</div><div>:</div><div id="rec-tgl-m"></div>
+  <div>Hijriyah</div><div>:</div><div id="rec-tgl-h" class="font-bold"></div>
+  <div>Santri</div><div>:</div><div id="rec-santri" class="font-bold"></div>
+  <div>Kamar/Kelas</div><div>:</div><div id="rec-kamar-kelas"></div>
+
+</div>
+
+        <table class="receipt-table mb-" id="rec-table-matrix">
           <tbody id="rec-items-tbody">
             </tbody>
         </table>
 
         <div class="text-[10px] italic border-b border-dashed border-gray-400 pb-2 mb-2">Terbilang: <span id="rec-terbilang"></span></div>
-        
-        <div class="flex justify-end text-right text-[10px] mt-4">
-          <div class="flex justify-center text-center text-[10px] mt-4">
-  <div class="w-36">
-    <p class="mb-1">Penerima</p>
-    <p id="rec-penerima-nama" class="font-bold underline"></p>
-  </div>
+        <div class="text-center mt-2">
+  <p class="text-[13px] tracking-tight">
+    Terima kasih atas pembayaran yang telah dilakukan
+  </p>
+
+  <p
+    class="text-[20px] mt-1"
+    style="font-family: 'Amiri', serif;"
+    dir="rtl"
+  >
+    جَزَاكُمُ اللَّهُ خَيْرًا كَثِيرًا
+  </p>
 </div>
-        </div>
+
+       <div class="w-80 mx-auto text-center text-[15px] mt-1">
+  <p class="mb-1">Penerima</p>
+  <p id="rec-penerima-nama" class="font-bold underline"></p>
+</div>
       </div>
     </div>
     
@@ -377,7 +387,7 @@
   </div>
 
   <script>
-    const DAFTAR_BULAN_HIJRIYAH = ["Syawal", "Dzulqa'dah", "Dzulhijjah", "Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan"];
+    const DAFTAR_BULAN_HIJRIYAH = ["Syawal", "Dzulqadah", "Dzulhijjah", "Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Syakban", "Ramadhan"];
     let DB_SANTRI = [], DB_BIAYA = [], DB_RIWAYAT = [], ACTIVE_ITEMS_KERANJANG = [], GLOBAL_SELECTED_KWITANSI = null;
 
     window.addEventListener('DOMContentLoaded', () => {
@@ -406,7 +416,7 @@
       let m = Math.floor((24 * l) / 709);
       let d = l - Math.floor((709 * m) / 24);
       let y = 30 * n + j - 30;
-      const hMonths = ["Muharram", "Safar", "Rabi'ul-Awwal", "Rabi'ul-Akhir", "Jumadil-Awwal", "Jumadil-Akhir", "Rajab", "Sya'ban", "Ramadhan", "Syawal", "Dzulqa'dah", "Dzulhijjah"];
+      const hMonths = ["Muharram", "Safar", "Rabi'ul-Awwal", "Rabi'ul-Akhir", "Jumadil-Awwal", "Jumadil-Akhir", "Rajab", "Syakban", "Ramadhan", "Syawal", "Dzulqadah", "Dzulhijjah"];
       return `${d} ${hMonths[m - 1]} ${y} H`;
     }
 
@@ -887,36 +897,71 @@
 
         // 1. Blok Syahriyyah (Bulanan)
         if (dataGroup[jenis].Syahriyyah.length > 0) {
-          let barisHtml = `<tr class="border-row">`;
+          // Kelompokkan Bulanan berdasarkan kategori agar posisi bulan/nominal sesuai kategori
+          const syahriyyahByKategori = {};
+          dataGroup[jenis].Syahriyyah.forEach(item => {
+            const k = item.kategori || '';
+            if (!syahriyyahByKategori[k]) syahriyyahByKategori[k] = [];
+            syahriyyahByKategori[k].push(item);
+          });
+
+          // Tentukan urutan kategori sesuai kemunculan pertama
+          const orderKategori = [];
+          dataGroup[jenis].Syahriyyah.forEach(item => {
+            const k = item.kategori || '';
+            if (!orderKategori.includes(k)) orderKategori.push(k);
+          });
+
+          let barisHtml = `<tr>`;
           barisHtml += `<td style="width:25px; text-align:left;">${globalIndex}.</td>`;
           
-          // Kolom Deskripsi (Header Jenis + Sifat Iuran + Sub Item sebaris lurus kebawah)
+          // Kolom Deskripsi (Header Jenis + Sifat Iuran + Per kategori)
           barisHtml += `<td style="padding-left:2px; line-height: 1.5;">`;
           if (!labelJenisDiambil) {
-            barisHtml += `[${jenis.charAt(0) + jenis.slice(1).toLowerCase()}]<br>`;
+            barisHtml += `[${jenis.charAt(0) + jenis.slice(1).toLowerCase()}]`;
             labelJenisDiambil = true;
           }
-          barisHtml += `*Syahriyyah<br>`;
-          // Render item bulan langsung di bawah *Syahriyyah agar sejajar
-          dataGroup[jenis].Syahriyyah.forEach(item => {
-            barisHtml += ` &nbsp;${item.bulan}<br>`;
+          barisHtml += `<br>`;
+
+          // Render per kategori: tampilkan nama kategori lalu bulan-bulan di bawahnya
+          orderKategori.forEach((kategori, idxKategori) => {
+            const arr = syahriyyahByKategori[kategori] || [];
+            // nama kategori
+            barisHtml += `&nbsp;&nbsp;${kategori}<br>`;
+            arr.forEach(item => {
+              barisHtml += ` &nbsp;&nbsp;&nbsp;${item.bulan}<br>`;
+            });
           });
           barisHtml += `</td>`;
           
-          // Kolom Simbol Rp. (Sejajar ke bawah mengikuti jumlah item)
+          // Kolom Simbol Rp. (sejajar jumlah baris bulan + baris kategori)
           barisHtml += `<td style="width:30px; text-align:left; color:#333; line-height: 1.5; padding-top: 4px;">`;
           // Jarak kosong mengimbangi header jenis + sifat iuran
-          barisHtml += `<br><br>`; 
-          dataGroup[jenis].Syahriyyah.forEach(() => {
-            barisHtml += `Rp.<br>`;
+          // *Syahriyyah memiliki 1 baris, jadi kita siapkan 2 break seperti sebelumnya agar visual tetap
+          barisHtml += `<br>`;
+
+          orderKategori.forEach((kategori) => {
+            const arr = syahriyyahByKategori[kategori] || [];
+            // baris untuk kategori (disimbolkan Rp kosong)
+            barisHtml += `<br>`;
+            // baris untuk tiap bulan
+            arr.forEach(() => {
+              barisHtml += `Rp.<br>`;
+            });
           });
           barisHtml += `</td>`;
           
-          // Kolom Angka Nominal Biaya (Sejajar ke kanan)
+          // Kolom Angka Nominal Biaya (sejajar)
           barisHtml += `<td style="text-align:right; font-weight:bold; padding-right:5px; line-height: 1.5; padding-top: 4px;">`;
-          barisHtml += `<br><br>`;
-          dataGroup[jenis].Syahriyyah.forEach(item => {
-            barisHtml += `${Number(item.harga).toLocaleString('id-ID')}<br>`;
+          barisHtml += `<br>`;
+
+          orderKategori.forEach((kategori) => {
+            const arr = syahriyyahByKategori[kategori] || [];
+            // kategori: nominal tidak tampil di baris kategori (biar sejajar visual)
+            barisHtml += `<span style="font-weight:normal"></span><br>`;
+            arr.forEach(item => {
+              barisHtml += `${Number(item.harga).toLocaleString('id-ID')}<br>`;
+            });
           });
           barisHtml += `</td></tr>`;
           
@@ -935,7 +980,7 @@
             barisHtml += `[${jenis.charAt(0) + jenis.slice(1).toLowerCase()}]<br>`;
             labelJenisDiambil = true;
           }
-          barisHtml += `*Tahunan<br>`;
+          barisHtml += `Tahunan<br>`;
           // Render item tahunan langsung di bawah *Tahunan agar sejajar
           dataGroup[jenis].Tahunan.forEach(item => {
             barisHtml += ` &nbsp;${item.kategori}<br>`;
@@ -1026,7 +1071,6 @@
       const ws = XLSX.utils.json_to_sheet(rows), wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Laporan"); XLSX.writeFile(wb, "LAPORAN_SIPM.xlsx");
     }
     
-    function clearSemuaDatabase() { if(confirm("Reset total database ke pengaturan awal?")) { localStorage.clear(); window.location.reload(); } }
     function formatRupiah(v) { return 'Rp' + Number(v).toLocaleString('id-ID'); }
     
     function convertAngkaKeTerbilang(nilai) {
