@@ -868,176 +868,33 @@
     }
 
     // UPDATE LOGIC FIX: BULAN/ITEM SEJAJAR TEGAK LURUS DI BAWAH TANDA BINTANG (*)
-    function bukaModalKwitansiStruk(t) {
-      GLOBAL_SELECTED_KWITANSI = t;
-      document.getElementById('rec-no').innerText = t.noKwitansi;
-      document.getElementById('rec-tgl-m').innerText = t.tglMasehi; document.getElementById('rec-tgl-h').innerText = t.tglHijriyah;
-      document.getElementById('rec-santri').innerText = t.namaSantri; document.getElementById('rec-kamar-kelas').innerText = `${t.kamar} / ${t.kelas}`;
-      document.getElementById('rec-terbilang').innerText = convertAngkaKeTerbilang(t.total) + " Rupiah";
-      document.getElementById('rec-penerima-nama').innerText = t.penerima;
+function shareKeWhatsAppDanUnduh() {
+  const nTarget = document.getElementById('raw-kwitansi-print');
 
-      // Grouping data belanja
-      let dataGroup = { PONDOK: { Syahriyyah: [], Tahunan: [] }, MADRASAH: { Syahriyyah: [], Tahunan: [] } };
-
-      t.items.forEach(item => {
-        let jenisKey = item.jenis === 'PONDOK' ? 'PONDOK' : 'MADRASAH';
-        if (item.tipePembayaran === 'Bulanan') {
-          dataGroup[jenisKey].Syahriyyah.push(item);
-        } else {
-          dataGroup[jenisKey].Tahunan.push(item);
-        }
-      });
-
-      const tb = document.getElementById('rec-items-tbody'); 
-      tb.innerHTML = '';
-      let globalIndex = 1;
-
-      ['PONDOK', 'MADRASAH'].forEach(jenis => {
-        let labelJenisDiambil = false;
-
-        // 1. Blok Syahriyyah (Bulanan)
-        if (dataGroup[jenis].Syahriyyah.length > 0) {
-          // Kelompokkan Bulanan berdasarkan kategori agar posisi bulan/nominal sesuai kategori
-          const syahriyyahByKategori = {};
-          dataGroup[jenis].Syahriyyah.forEach(item => {
-            const k = item.kategori || '';
-            if (!syahriyyahByKategori[k]) syahriyyahByKategori[k] = [];
-            syahriyyahByKategori[k].push(item);
-          });
-
-          // Tentukan urutan kategori sesuai kemunculan pertama
-          const orderKategori = [];
-          dataGroup[jenis].Syahriyyah.forEach(item => {
-            const k = item.kategori || '';
-            if (!orderKategori.includes(k)) orderKategori.push(k);
-          });
-
-          let barisHtml = `<tr>`;
-          barisHtml += `<td style="width:25px; text-align:left;">${globalIndex}.</td>`;
-          
-          // Kolom Deskripsi (Header Jenis + Sifat Iuran + Per kategori)
-          barisHtml += `<td style="padding-left:2px; line-height: 1.5;">`;
-          if (!labelJenisDiambil) {
-            barisHtml += `[${jenis.charAt(0) + jenis.slice(1).toLowerCase()}]`;
-            labelJenisDiambil = true;
-          }
-          barisHtml += `<br>`;
-
-          // Render per kategori: tampilkan nama kategori lalu bulan-bulan di bawahnya
-          orderKategori.forEach((kategori, idxKategori) => {
-            const arr = syahriyyahByKategori[kategori] || [];
-            // nama kategori
-            barisHtml += `&nbsp;&nbsp;${kategori}<br>`;
-            arr.forEach(item => {
-              barisHtml += ` &nbsp;&nbsp;&nbsp;${item.bulan}<br>`;
-            });
-          });
-          barisHtml += `</td>`;
-          
-          // Kolom Simbol Rp. (sejajar jumlah baris bulan + baris kategori)
-          barisHtml += `<td style="width:30px; text-align:left; color:#333; line-height: 1.5; padding-top: 4px;">`;
-          // Jarak kosong mengimbangi header jenis + sifat iuran
-          // *Syahriyyah memiliki 1 baris, jadi kita siapkan 2 break seperti sebelumnya agar visual tetap
-          barisHtml += `<br>`;
-
-          orderKategori.forEach((kategori) => {
-            const arr = syahriyyahByKategori[kategori] || [];
-            // baris untuk kategori (disimbolkan Rp kosong)
-            barisHtml += `<br>`;
-            // baris untuk tiap bulan
-            arr.forEach(() => {
-              barisHtml += `Rp.<br>`;
-            });
-          });
-          barisHtml += `</td>`;
-          
-          // Kolom Angka Nominal Biaya (sejajar)
-          barisHtml += `<td style="text-align:right; font-weight:bold; padding-right:5px; line-height: 1.5; padding-top: 4px;">`;
-          barisHtml += `<br>`;
-
-          orderKategori.forEach((kategori) => {
-            const arr = syahriyyahByKategori[kategori] || [];
-            // kategori: nominal tidak tampil di baris kategori (biar sejajar visual)
-            barisHtml += `<span style="font-weight:normal"></span><br>`;
-            arr.forEach(item => {
-              barisHtml += `${Number(item.harga).toLocaleString('id-ID')}<br>`;
-            });
-          });
-          barisHtml += `</td></tr>`;
-          
-          tb.innerHTML += barisHtml;
-          globalIndex++;
-        }
-
-        // 2. Blok Tahunan
-        if (dataGroup[jenis].Tahunan.length > 0) {
-          let barisHtml = `<tr class="border-row">`;
-          barisHtml += `<td style="width:25px; text-align:left;">${globalIndex}.</td>`;
-          
-          // Kolom Deskripsi 
-          barisHtml += `<td style="padding-left:2px; line-height: 1.5;">`;
-          if (!labelJenisDiambil) {
-            barisHtml += `[${jenis.charAt(0) + jenis.slice(1).toLowerCase()}]<br>`;
-            labelJenisDiambil = true;
-          }
-          barisHtml += `Tahunan<br>`;
-          // Render item tahunan langsung di bawah *Tahunan agar sejajar
-          dataGroup[jenis].Tahunan.forEach(item => {
-            barisHtml += ` &nbsp;${item.kategori}<br>`;
-          });
-          barisHtml += `</td>`;
-          
-          // Kolom Simbol Rp.
-          barisHtml += `<td style="width:30px; text-align:left; color:#333; line-height: 1.5; padding-top: 4px;">`;
-          barisHtml += `<br>`;
-          dataGroup[jenis].Tahunan.forEach(() => {
-            barisHtml += `Rp.<br>`;
-          });
-          barisHtml += `</td>`;
-          
-          // Kolom Angka Nominal
-          barisHtml += `<td style="text-align:right; font-weight:bold; padding-right:5px; line-height: 1.5; padding-top: 4px;">`;
-          barisHtml += `<br>`;
-          dataGroup[jenis].Tahunan.forEach(item => {
-            barisHtml += `${Number(item.harga).toLocaleString('id-ID')}<br>`;
-          });
-          barisHtml += `</td></tr>`;
-          
-          tb.innerHTML += barisHtml;
-          globalIndex++;
-        }
-      });
-
-      // Baris Total Paling Bawah
-      tb.innerHTML += `
-        <tr style="font-weight:bold; font-size:12px;">
-          <td></td>
-          <td style="padding-top:10px;">Total Bayar</td>
-          <td style="padding-top:10px; text-align:left;">Rp.</td>
-          <td style="padding-top:10px; text-align:right; padding-right:5px;">${Number(t.total).toLocaleString('id-ID')}</td>
-        </tr>
-      `;
-
-      document.getElementById('modal-kwitansi').classList.remove('hidden');
+  htmlToImage.toPng(nTarget, {
+    bgcolor: '#ffffff',
+    pixelRatio: 4, // 🔥 naikkan dari 3 → 4
+    cacheBust: true,
+    skipAutoScale: true,
+    style: {
+      transform: 'none', // ❌ jangan scale
+      WebkitFontSmoothing: 'antialiased',
+      MozOsxFontSmoothing: 'grayscale',
+      textRendering: 'geometricPrecision'
     }
-    
-    function closeModalKwitansi() { document.getElementById('modal-kwitansi').classList.add('hidden'); }
+  })
+  .then(url => {
+    const a = document.createElement('a');
+    a.download = `Kwitansi_HD_${GLOBAL_SELECTED_KWITANSI.namaSantri.replace(/\s+/g, '_')}_${GLOBAL_SELECTED_KWITANSI.noKwitansi}.png`;
+    a.href = url;
+    a.click();
 
-    function shareKeWhatsAppDanUnduh() {
-      const nTarget = document.getElementById('raw-kwitansi-print');
-      htmlToImage.toPng(nTarget, { 
-        bgcolor: '#ffffff', pixelRatio: 3, 
-        style: { transform: 'scale(1)', transformOrigin: 'top left' }
-      }).then(url => {
-        const a = document.createElement('a'); 
-        a.download = `Kwitansi_HD_${GLOBAL_SELECTED_KWITANSI.namaSantri.replace(/\s+/g, '_')}_${GLOBAL_SELECTED_KWITANSI.noKwitansi}.png`; 
-        a.href = url; a.click();
-        
-        let m = `*BUKTI PEMBAYARAN LUNAS*\nNo: ${GLOBAL_SELECTED_KWITANSI.noKwitansi}\nSantri: ${GLOBAL_SELECTED_KWITANSI.namaSantri}\nTotal: ${formatRupiah(GLOBAL_SELECTED_KWITANSI.total)}\n\n_File kwitansi gambar HD telah terunduh otomatis ke perangkat Anda._\nTerima Kasih.`;
-        window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(m)}`, '_blank');
-      }).catch(err => console.error("Gagal memproses gambar", err));
-    }
+    const m = `*BUKTI PEMBAYARAN LUNAS*\nNo: ${GLOBAL_SELECTED_KWITANSI.noKwitansi}\nSantri: ${GLOBAL_SELECTED_KWITANSI.namaSantri}\nTotal: ${formatRupiah(GLOBAL_SELECTED_KWITANSI.total)}\n\n_File kwitansi gambar HD telah terunduh otomatis ke perangkat Anda._\nTerima Kasih.`;
 
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(m)}`, '_blank');
+  })
+  .catch(err => console.error("Gagal memproses gambar", err));
+}
     function renderRiwayat() {
       const kw = document.getElementById('search-riwayat').value.toLowerCase();
       const le = document.getElementById('list-riwayat'); le.innerHTML = '';
