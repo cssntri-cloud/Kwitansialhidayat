@@ -9,13 +9,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
-  <!-- Tailwind CSS -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!-- html-to-image -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
-  <!-- SheetJS (xlsx) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
@@ -30,34 +26,30 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
-    
-    /* STYLING NOTA KWITANSI SUPAYA RAPI & JELAS */
     .receipt-container {
       width: 100%;
-      max-width: 450px;
-      background: #ffffff;
-      color: #000000;
+      max-width: 400px;
+      background: #fff;
+      color: #000;
       font-family: 'Courier New', Courier, monospace;
-      font-size: 13px;
+      font-size: 12px;
       line-height: 1.4;
-      padding: 20px 15px;
-      border: 1px solid #000000;
+      padding: 15px;
+      border: 1px solid #ddd;
     }
+    /* Style tabel kwitansi agar sesuai dengan gambar referensi */
     .receipt-table {
       width: 100%;
       border-collapse: collapse;
-      table-layout: fixed; /* Menjamin ukuran lebar kolom konsisten lurus ke bawah */
+      font-size: 11px;
     }
-    .receipt-table td {
-      padding: 1.5px 2px; /* Jarak atas bawah td dibuat lebih rapat dan padat */
-      vertical-align: middle;
-      color: #000000;
+    .receipt-table th, .receipt-table td {
+      padding: 4px 2px;
+      vertical-align: top;
     }
-    /* Garis hitam solid khusus pembatas blok besar Pondok dan Madrasah */
-    .line-black {
-      border-bottom: 2px solid #000000 !important;
+    .receipt-table tr.border-row {
+      border-bottom: 1.5px solid #000;
     }
-    
     @media print {
       body * {
         visibility: hidden;
@@ -81,12 +73,11 @@
 </head>
 <body class="bg-gray-50 text-gray-800 pb-24 select-none">
 
-  <!-- TOP HEADER -->
   <header class="bg-emerald-600 text-white sticky top-0 z-40 shadow-md px-4 py-3 flex items-center justify-between">
     <div class="flex items-center space-x-3">
       <img src="Pondok.png" alt="Logo" onerror="this.src='https://placehold.co/80x80/059669/ffffff?text=Pondok'" class="w-10 h-10 rounded-full bg-white p-0.5 object-cover">
       <div>
-        <h1 class="text-base font-bold leading-tight">PONPES AL HIDAYAT</h1>
+        <h1 class="text-base font-bold leading-tight">PONPES ALHIDAYAT</h1>
         <p class="text-xs text-emerald-100" id="header-date">Memuat tanggal...</p>
       </div>
     </div>
@@ -95,10 +86,8 @@
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
   <main class="p-4 max-w-md mx-auto">
 
-    <!-- 1. DASHBOARD SECTION -->
     <section id="sec-dashboard" class="space-y-4">
       <div class="bg-gradient-to-br from-emerald-600 to-teal-700 text-white p-5 rounded-2xl shadow-sm">
         <span class="text-xs text-emerald-100 uppercase tracking-wider block font-semibold">Total Pendapatan (2026)</span>
@@ -132,7 +121,6 @@
       </div>
     </section>
 
-    <!-- 2. DATA SANTRI SECTION -->
     <section id="sec-santri" class="space-y-4 hidden">
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-bold text-gray-800">Manajemen Data Santri</h2>
@@ -149,7 +137,6 @@
       <div id="list-santri" class="w-full overflow-x-auto hide-scrollbar"></div>
     </section>
 
-    <!-- 3. PEMBAYARAN MULTI-SELECT SECTION -->
     <section id="sec-pembayaran" class="space-y-4 hidden">
       <h2 class="text-lg font-bold text-gray-800">Transaksi Multi-Pembayaran</h2>
       
@@ -232,7 +219,6 @@
       </div>
     </section>
 
-    <!-- 4. RIWAYAT SECTION -->
     <section id="sec-riwayat" class="space-y-4 hidden">
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-bold text-gray-800">Riwayat Transaksi Buku</h2>
@@ -245,7 +231,6 @@
       <div id="list-riwayat" class="space-y-2"></div>
     </section>
 
-    <!-- 5. PENGATURAN BIAYA SECTION -->
     <section id="sec-pengaturan" class="space-y-4 hidden">
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-bold text-gray-800">Master Konfigurasi Biaya</h2>
@@ -256,7 +241,6 @@
       <div id="list-biaya" class="space-y-2"></div>
     </section>
 
-    <!-- 6. BACKUP & RESTORE SECTION -->
     <section id="sec-backup" class="space-y-4 hidden">
       <h2 class="text-lg font-bold text-gray-800">Backup & Ekspor Data</h2>
       <div class="bg-white p-4 rounded-xl shadow-xs border border-gray-100 space-y-2">
@@ -271,12 +255,15 @@
           <span class="material-icons text-sm mr-2">grid_on</span>Cetak Laporan Excel
         </button>
       </div>
-      
+      <div class="bg-red-50 p-4 rounded-xl border border-red-100">
+        <button onclick="clearSemuaDatabase()" class="bg-red-600 text-white text-[11px] px-3 py-2 rounded-lg font-bold w-full">
+          Reset Database Pabrik
+        </button>
+      </div>
     </section>
 
   </main>
 
-  <!-- BOTTOM NAVIGATION BAR -->
   <nav class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 z-40 shadow-xl px-2 py-1 max-w-md mx-auto flex justify-around">
     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="flex flex-col items-center justify-center text-emerald-600 py-1 px-2">
       <span class="material-icons text-xl">dashboard</span><span class="text-[10px] font-bold">Beranda</span>
@@ -298,8 +285,6 @@
     </button>
   </nav>
 
-  <!-- MODALS COMPONENTS -->
-  <!-- FORM DATA SANTRI -->
   <div id="modal-santri" class="fixed inset-0 z-50 bg-black/50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl w-full max-w-sm p-5 space-y-4">
       <h3 id="modal-santri-title" class="text-sm font-bold text-gray-800">Form Data Santri</h3>
@@ -316,7 +301,6 @@
     </div>
   </div>
 
-  <!-- FORM MASTER BIAYA -->
   <div id="modal-biaya" class="fixed inset-0 z-50 bg-black/50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl w-full max-w-sm p-5 space-y-4">
       <h3 id="modal-biaya-title" class="text-sm font-bold text-gray-800">Tambah Kategori Master Biaya</h3>
@@ -345,47 +329,37 @@
     </div>
   </div>
 
-  <!-- DISPLAY KWITANSI STRUK -->
   <div id="modal-kwitansi" class="fixed inset-0 z-50 bg-black/80 hidden flex flex-col items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white p-2 rounded-xl mb-4 shadow-lg overflow-x-auto max-w-full">
       <div id="raw-kwitansi-print" class="receipt-container">
-        <div class="text-center border-b border-dashed border-gray-400 pb-2 mb-3 flex flex-col items-center justify-center">
-          <img src="Pondok.png" alt="Logo" onerror="this.src='https://placehold.co/50x50/000000/ffffff?text=PP'" class="w-10 h-10 rounded-full object-cover mb-1 mx-auto">
-          <span class="font-bold text-base uppercase block" id="rec-pondok-nama" style="letter-spacing: 0.5px;">PONPES & MADRASAH ALHIDAYAT</span>
-          <p class="text-[11px] font-bold mt-0.5 text-gray-600">PEMBAYARAN ADMINISTRASI</p>
+        <div class="text-center border-b border-dashed border-gray-400 pb-2 mb-2 flex flex-col items-center justify-center">
+          <img src="Pondok.png" alt="Logo" onerror="this.src='https://placehold.co/50x50/000000/ffffff?text=PP'" class="w-8 h-8 rounded-full object-cover mb-1 mx-auto">
+          <span class="font-bold text-sm uppercase block" id="rec-pondok-nama">Ponpes & Madrasah Al Hidayat</span>
+          <p class="text-[10px] mt-0.5">Pembayaran Administrasi</p>
         </div>
         
-        <div class="space-y-1 text-xs border-b border-dashed border-gray-400 pb-2 mb-3 font-semibold">
-          <div class="flex"><span class="w-24 block">No Kwitansi</span><span>: <span id="rec-no" class="font-bold"></span></span></div>
-          <div class="flex"><span class="w-24 block">Masehi</span><span>: <span id="rec-tgl-m"></span></span></div>
-          <div class="flex"><span class="w-24 block">Hijriyah</span><span>: <span id="rec-tgl-h" class="font-bold"></span></span></div>
-          <div class="flex"><span class="w-24 block">Santri</span><span>: <span id="rec-santri" class="font-bold"></span></span></div>
-          <div class="flex"><span class="w-24 block">Kamar/Kelas</span><span>: <span id="rec-kamar-kelas"></span></span></div>
+        <div class="space-y-0.5 text-[11px] border-b border-dashed border-gray-400 pb-2 mb-2">
+          <div>No Kwitansi: <span id="rec-no" class="font-bold"></span></div>
+          <div>Masehi    : <span id="rec-tgl-m"></span></div>
+          <div>Hijriyah  : <span id="rec-tgl-h" class="font-bold"></span></div>
+          <div>Santri    : <span id="rec-santri" class="font-bold"></span></div>
+          <div>Kamar/Kelas: <span id="rec-kamar-kelas"></span></div>
         </div>
 
-        <!-- Tabel Item Rincian Utama (Kolom Uang Dibagi Dua: Simbol & Angka agar Lurus Sejajar Sempurna) -->
-        <table class="receipt-table mb-2">
-          <colgroup>
-            <col style="width: 25%;">
-            <col style="width: 7%;">
-            <col style="width: 38%;">
-            <col style="width: 10%;"> <!-- Kolom khusus simbol Rp. -->
-            <col style="width: 20%;"> <!-- Kolom khusus nominal angka -->
-          </colgroup>
+        <table class="receipt-table mb-2" id="rec-table-matrix">
           <tbody id="rec-items-tbody">
-            <!-- Diisi melalui JavaScript -->
-          </tbody>
+            </tbody>
         </table>
 
-        <div class="text-xs font-semibold border-b border-dashed border-gray-400 pb-2 mb-3" style="line-height: 1.4;">
-          Terbilang: <span id="rec-terbilang" class="italic font-bold text-gray-700"></span>
-        </div>
+        <div class="text-[10px] italic border-b border-dashed border-gray-400 pb-2 mb-2">Terbilang: <span id="rec-terbilang"></span></div>
         
-        <div class="flex justify-end text-center text-xs font-semibold mt-4">
-          <div class="w-40">
-            <p class="mb-1">Penerima</p>
-            <p id="rec-penerima-nama" class="font-bold underline uppercase"></p>
-          </div>
+        <div class="flex justify-end text-right text-[10px] mt-4">
+          <div class="flex justify-center text-center text-[10px] mt-4">
+  <div class="w-36">
+    <p class="mb-1">Penerima</p>
+    <p id="rec-penerima-nama" class="font-bold underline"></p>
+  </div>
+</div>
         </div>
       </div>
     </div>
@@ -402,7 +376,6 @@
     </div>
   </div>
 
-  <!-- CORE APPLICATION LOGIC SYSTEM -->
   <script>
     const DAFTAR_BULAN_HIJRIYAH = ["Syawal", "Dzulqa'dah", "Dzulhijjah", "Muharram", "Safar", "Rabiul Awal", "Rabiul Akhir", "Jumadil Awal", "Jumadil Akhir", "Rajab", "Sya'ban", "Ramadhan"];
     let DB_SANTRI = [], DB_BIAYA = [], DB_RIWAYAT = [], ACTIVE_ITEMS_KERANJANG = [], GLOBAL_SELECTED_KWITANSI = null;
@@ -614,6 +587,12 @@
         const boxMadrasah = document.getElementById(`tabel-iuran-madrasah-${santriId}`);
         boxPondok.innerHTML = ''; boxMadrasah.innerHTML = '';
 
+        if (DB_BIAYA.length === 0) {
+          boxPondok.innerHTML = `<p class="text-gray-400 italic">Belum ada master biaya.</p>`;
+          boxMadrasah.innerHTML = `<p class="text-gray-400 italic">Belum ada master biaya.</p>`;
+          return;
+        }
+
         DB_BIAYA.forEach(b => {
           let targetBox = b.jenis === 'PONDOK' ? boxPondok : boxMadrasah;
           let divKategori = document.createElement('div');
@@ -644,9 +623,13 @@
           divKategori.appendChild(gridSub);
           targetBox.appendChild(divKategori);
         });
+
+        if (boxPondok.innerHTML === '') boxPondok.innerHTML = '<p class="text-gray-400 italic">Tidak ada.</p>';
+        if (boxMadrasah.innerHTML === '') boxMadrasah.innerHTML = '<p class="text-gray-400 italic">Tidak ada.</p>';
       } else {
         rowDetail.classList.add('hidden');
         iconArrow.innerText = "keyboard_arrow_right";
+        iconArrow.className = "material-icons text-xs text-gray-400";
       }
     }
 
@@ -828,6 +811,7 @@
     function updateKeranjangPreviewUI() {
       const box = document.getElementById('keranjang-list-preview'); box.innerHTML = '';
       let total = 0;
+      
       if(ACTIVE_ITEMS_KERANJANG.length === 0) {
         box.innerHTML = `<p class="text-gray-400 italic text-[11px]">Belum ada item terpilih.</p>`;
       } else {
@@ -842,6 +826,7 @@
           </div>`;
         });
       }
+      
       document.getElementById('pay-item-counter').innerText = `${ACTIVE_ITEMS_KERANJANG.length} item dipilih`;
       document.getElementById('pay-realtime-total').innerText = formatRupiah(total);
     }
@@ -872,159 +857,121 @@
       bukaModalKwitansiStruk(payload);
     }
 
-    // LOGIKA PENYUSUNAN STRUK KWITANSI PRESISI (JARAK LEBIH RAPAT & KOORDINAT RP SEJAJAR LURUS)
+    // UPDATE LOGIC FIX: BULAN/ITEM SEJAJAR TEGAK LURUS DI BAWAH TANDA BINTANG (*)
     function bukaModalKwitansiStruk(t) {
       GLOBAL_SELECTED_KWITANSI = t;
       document.getElementById('rec-no').innerText = t.noKwitansi;
-      document.getElementById('rec-tgl-m').innerText = t.tglMasehi; 
-      document.getElementById('rec-tgl-h').innerText = t.tglHijriyah;
-      document.getElementById('rec-santri').innerText = t.namaSantri; 
-      document.getElementById('rec-kamar-kelas').innerText = `${t.kamar} / ${t.kelas}`;
+      document.getElementById('rec-tgl-m').innerText = t.tglMasehi; document.getElementById('rec-tgl-h').innerText = t.tglHijriyah;
+      document.getElementById('rec-santri').innerText = t.namaSantri; document.getElementById('rec-kamar-kelas').innerText = `${t.kamar} / ${t.kelas}`;
       document.getElementById('rec-terbilang').innerText = convertAngkaKeTerbilang(t.total) + " Rupiah";
       document.getElementById('rec-penerima-nama').innerText = t.penerima;
 
-      let itemPondokSyahriyyah = t.items.filter(i => i.jenis === 'PONDOK' && i.tipePembayaran === 'Bulanan');
-      let itemPondokTahunan = t.items.filter(i => i.jenis === 'PONDOK' && i.tipePembayaran === 'Tahunan');
-      let itemMadrasahSyahriyyah = t.items.filter(i => i.jenis === 'MADRASAH' && i.tipePembayaran === 'Bulanan');
-      let itemMadrasahTahunan = t.items.filter(i => i.jenis === 'MADRASAH' && i.tipePembayaran === 'Tahunan');
+      // Grouping data belanja
+      let dataGroup = { PONDOK: { Syahriyyah: [], Tahunan: [] }, MADRASAH: { Syahriyyah: [], Tahunan: [] } };
+
+      t.items.forEach(item => {
+        let jenisKey = item.jenis === 'PONDOK' ? 'PONDOK' : 'MADRASAH';
+        if (item.tipePembayaran === 'Bulanan') {
+          dataGroup[jenisKey].Syahriyyah.push(item);
+        } else {
+          dataGroup[jenisKey].Tahunan.push(item);
+        }
+      });
 
       const tb = document.getElementById('rec-items-tbody'); 
       tb.innerHTML = '';
+      let globalIndex = 1;
 
-      // ================= BLOK 1: PONDOK =================
-      tb.innerHTML += `<tr>
-        <td style="font-weight:bold; font-size:13px; padding-top:4px;">[Pondok]</td>
-        <td></td>
-        <td style="font-weight:bold; padding-top:4px;">*Syahriyyah</td>
-        <td></td>
-        <td></td>
-      </tr>`;
+      ['PONDOK', 'MADRASAH'].forEach(jenis => {
+        let labelJenisDiambil = false;
 
-      let defaultSyahriyyahPondok = [
-        { key: "Syawal", defNominal: "50.000" },
-        { key: "Muharram", defNominal: "50.000" }
-      ];
+        // 1. Blok Syahriyyah (Bulanan)
+        if (dataGroup[jenis].Syahriyyah.length > 0) {
+          let barisHtml = `<tr class="border-row">`;
+          barisHtml += `<td style="width:25px; text-align:left;">${globalIndex}.</td>`;
+          
+          // Kolom Deskripsi (Header Jenis + Sifat Iuran + Sub Item sebaris lurus kebawah)
+          barisHtml += `<td style="padding-left:2px; line-height: 1.5;">`;
+          if (!labelJenisDiambil) {
+            barisHtml += `[${jenis.charAt(0) + jenis.slice(1).toLowerCase()}]<br>`;
+            labelJenisDiambil = true;
+          }
+          barisHtml += `*Syahriyyah<br>`;
+          // Render item bulan langsung di bawah *Syahriyyah agar sejajar
+          dataGroup[jenis].Syahriyyah.forEach(item => {
+            barisHtml += ` &nbsp;${item.bulan}<br>`;
+          });
+          barisHtml += `</td>`;
+          
+          // Kolom Simbol Rp. (Sejajar ke bawah mengikuti jumlah item)
+          barisHtml += `<td style="width:30px; text-align:left; color:#333; line-height: 1.5; padding-top: 4px;">`;
+          // Jarak kosong mengimbangi header jenis + sifat iuran
+          barisHtml += `<br><br>`; 
+          dataGroup[jenis].Syahriyyah.forEach(() => {
+            barisHtml += `Rp.<br>`;
+          });
+          barisHtml += `</td>`;
+          
+          // Kolom Angka Nominal Biaya (Sejajar ke kanan)
+          barisHtml += `<td style="text-align:right; font-weight:bold; padding-right:5px; line-height: 1.5; padding-top: 4px;">`;
+          barisHtml += `<br><br>`;
+          dataGroup[jenis].Syahriyyah.forEach(item => {
+            barisHtml += `${Number(item.harga).toLocaleString('id-ID')}<br>`;
+          });
+          barisHtml += `</td></tr>`;
+          
+          tb.innerHTML += barisHtml;
+          globalIndex++;
+        }
 
-      defaultSyahriyyahPondok.forEach((def, idx) => {
-        let match = itemPondokSyahriyyah.find(i => i.bulan === def.key);
-        let hargaText = match ? Number(match.harga).toLocaleString('id-ID') : def.defNominal;
-        let styleWarna = match ? "font-weight:bold; color:#000;" : "color:#888; font-style:italic;";
-        let noUrut = (idx === 0) ? "1." : "2.";
-
-        tb.innerHTML += `<tr style="${styleWarna}">
-          <td></td>
-          <td style="text-align:left;">${noUrut}</td>
-          <td style="padding-left:10px;">${def.key}</td>
-          <td style="text-align:left;">Rp.</td>
-          <td style="text-align:right;">${hargaText}</td>
-        </tr>`;
+        // 2. Blok Tahunan
+        if (dataGroup[jenis].Tahunan.length > 0) {
+          let barisHtml = `<tr class="border-row">`;
+          barisHtml += `<td style="width:25px; text-align:left;">${globalIndex}.</td>`;
+          
+          // Kolom Deskripsi 
+          barisHtml += `<td style="padding-left:2px; line-height: 1.5;">`;
+          if (!labelJenisDiambil) {
+            barisHtml += `[${jenis.charAt(0) + jenis.slice(1).toLowerCase()}]<br>`;
+            labelJenisDiambil = true;
+          }
+          barisHtml += `*Tahunan<br>`;
+          // Render item tahunan langsung di bawah *Tahunan agar sejajar
+          dataGroup[jenis].Tahunan.forEach(item => {
+            barisHtml += ` &nbsp;${item.kategori}<br>`;
+          });
+          barisHtml += `</td>`;
+          
+          // Kolom Simbol Rp.
+          barisHtml += `<td style="width:30px; text-align:left; color:#333; line-height: 1.5; padding-top: 4px;">`;
+          barisHtml += `<br>`;
+          dataGroup[jenis].Tahunan.forEach(() => {
+            barisHtml += `Rp.<br>`;
+          });
+          barisHtml += `</td>`;
+          
+          // Kolom Angka Nominal
+          barisHtml += `<td style="text-align:right; font-weight:bold; padding-right:5px; line-height: 1.5; padding-top: 4px;">`;
+          barisHtml += `<br>`;
+          dataGroup[jenis].Tahunan.forEach(item => {
+            barisHtml += `${Number(item.harga).toLocaleString('id-ID')}<br>`;
+          });
+          barisHtml += `</td></tr>`;
+          
+          tb.innerHTML += barisHtml;
+          globalIndex++;
+        }
       });
 
-      tb.innerHTML += `<tr>
-        <td></td>
-        <td></td>
-        <td style="font-weight:bold; padding-top:3px;">*Tahunan</td>
-        <td></td>
-        <td></td>
-      </tr>`;
-
-      let defaultTahunanPondok = [
-        { key: "Daftar Baru", defNominal: "100.000", no: "3." },
-        { key: "U.Gedung", defNominal: "200.000", no: "4." }
-      ];
-
-      defaultTahunanPondok.forEach((def, idx) => {
-        let match = itemPondokTahunan.find(i => i.kategori === def.key);
-        let hargaText = match ? Number(match.harga).toLocaleString('id-ID') : def.defNominal;
-        let styleWarna = match ? "font-weight:bold; color:#000;" : "color:#888; font-style:italic;";
-        
-        let isAkhirKelompokPondok = (idx === defaultTahunanPondok.length - 1);
-
-        tb.innerHTML += `<tr class="${isAkhirKelompokPondok ? 'line-black' : ''}" style="${styleWarna}">
+      // Baris Total Paling Bawah
+      tb.innerHTML += `
+        <tr style="font-weight:bold; font-size:12px;">
           <td></td>
-          <td style="text-align:left; ${isAkhirKelompokPondok?'padding-bottom:5px;':''}">${def.no}</td>
-          <td style="padding-left:10px; ${isAkhirKelompokPondok?'padding-bottom:5px;':''}">${def.key}</td>
-          <td style="text-align:left; ${isAkhirKelompokPondok?'padding-bottom:5px;':''}">Rp.</td>
-          <td style="text-align:right; ${isAkhirKelompokPondok?'padding-bottom:5px;':''}">${hargaText}</td>
-        </tr>`;
-      });
-
-      // ================= BLOK 2: DATA KOSONG NO 5 =================
-      tb.innerHTML += `<tr>
-        <td></td>
-        <td style="padding-top:4px;"></td>
-        <td style="padding-top:4px;"></td>
-        <td style="padding-top:4px;"></td>
-      </tr>`;
-
-      // ================= BLOK 3: MADRASAH =================
-      tb.innerHTML += `<tr>
-        <td style="font-weight:bold; font-size:13px; padding-top:4px;">[Madrasah]</td>
-        <td></td>
-        <td style="font-weight:bold; padding-top:4px;">*Syahriyyah</td>
-        <td></td>
-        <td></td>
-      </tr>`;
-
-      let defaultSyahriyyahMadrasah = [
-        { key: "Syawal", defNominal: "50.000", no: "6." },
-        { key: "Muharram", defNominal: "50.000", no: "7." }
-      ];
-
-      defaultSyahriyyahMadrasah.forEach((def) => {
-        let match = itemMadrasahSyahriyyah.find(i => i.bulan === def.key);
-        let hargaText = match ? Number(match.harga).toLocaleString('id-ID') : def.defNominal;
-        let styleWarna = match ? "font-weight:bold; color:#000;" : "color:#888; font-style:italic;";
-
-        tb.innerHTML += `<tr style="${styleWarna}">
-          <td></td>
-          <td style="text-align:left;">${def.no}</td>
-          <td style="padding-left:10px;">${def.key}</td>
-          <td style="text-align:left;">Rp.</td>
-          <td style="text-align:right;">${hargaText}</td>
-        </tr>`;
-      });
-
-      let isAdaTahunanMadrasah = itemMadrasahTahunan.length > 0;
-      let styleWarnaHeaderTahunanMadrasah = isAdaTahunanMadrasah ? "font-weight:bold; color:#000;" : "color:#888; font-style:italic;";
-      
-      tb.innerHTML += `<tr style="${styleWarnaHeaderTahunanMadrasah}">
-        <td></td>
-        <td></td>
-        <td style="font-weight:bold; padding-top:3px;">*Tahunan</td>
-        <td style="text-align:left; padding-top:3px;">Rp.</td>
-        <td style="text-align:right; font-weight:bold; padding-top:3px;">200.000</td>
-      </tr>`;
-
-      let defaultTahunanMadrasah = [
-        { key: "Daftar Baru", hargaText: "", no: "8." },
-        { key: "Seragam", hargaText: "100.000", no: "9." }
-      ];
-
-      defaultTahunanMadrasah.forEach((def, idx) => {
-        let match = itemMadrasahTahunan.find(i => i.kategori === def.key);
-        let styleWarna = match ? "font-weight:bold; color:#000;" : "color:#888; font-style:italic;";
-        let displayHarga = def.hargaText ? def.hargaText : '';
-        let displaySimbolRp = def.hargaText ? 'Rp.' : '';
-        
-        let isAkhirKelompokMadrasah = (idx === defaultTahunanMadrasah.length - 1);
-
-        tb.innerHTML += `<tr class="${isAkhirKelompokMadrasah ? 'line-black' : ''}" style="${styleWarna}">
-          <td></td>
-          <td style="text-align:left; ${isAkhirKelompokMadrasah?'padding-bottom:5px;':''}">${def.no}</td>
-          <td style="padding-left:10px; ${isAkhirKelompokMadrasah?'padding-bottom:5px;':''}">${def.key}</td>
-          <td style="text-align:left; ${isAkhirKelompokMadrasah?'padding-bottom:5px;':''}">${displaySimbolRp}</td>
-          <td style="text-align:right; ${isAkhirKelompokMadrasah?'padding-bottom:5px;':''}">${displayHarga}</td>
-        </tr>`;
-      });
-
-      // ================= BARIS TOTAL BAYAR PALING BAWAH =================
-      tb.innerHTML += `<tr style="font-weight:bold; font-size:14px;">
-        <td colspan="2" style="padding-top:10px; font-weight:bold; text-transform:uppercase;">Total Bayar</td>
-        <td></td>
-        <td style="text-align:left; padding-top:10px; font-weight:bold; border-bottom:3px double #000;">Rp.</td>
-        <td style="text-align:right; padding-top:10px; font-weight:bold; border-bottom:3px double #000;">${Number(t.total).toLocaleString('id-ID')}</td>
-      </tr>`;
+          <td style="padding-top:10px;">Total Bayar</td>
+          <td style="padding-top:10px; text-align:left;">Rp.</td>
+          <td style="padding-top:10px; text-align:right; padding-right:5px;">${Number(t.total).toLocaleString('id-ID')}</td>
+        </tr>
+      `;
 
       document.getElementById('modal-kwitansi').classList.remove('hidden');
     }
@@ -1079,6 +1026,7 @@
       const ws = XLSX.utils.json_to_sheet(rows), wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Laporan"); XLSX.writeFile(wb, "LAPORAN_SIPM.xlsx");
     }
     
+    function clearSemuaDatabase() { if(confirm("Reset total database ke pengaturan awal?")) { localStorage.clear(); window.location.reload(); } }
     function formatRupiah(v) { return 'Rp' + Number(v).toLocaleString('id-ID'); }
     
     function convertAngkaKeTerbilang(nilai) {
