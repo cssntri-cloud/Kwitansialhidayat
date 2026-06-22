@@ -9,13 +9,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
-  <!-- Tailwind CSS -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <!-- Material Icons -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!-- html-to-image -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.11.11/html-to-image.min.js"></script>
-  <!-- SheetJS (xlsx) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
   <style>
@@ -41,7 +37,6 @@
       padding: 15px;
       border: 1px solid #ddd;
     }
-    /* Kustomisasi gaya cetak */
     @media print {
       body * {
         visibility: hidden;
@@ -65,12 +60,11 @@
 </head>
 <body class="bg-gray-50 text-gray-800 pb-24 select-none">
 
-  <!-- TOP HEADER -->
   <header class="bg-emerald-600 text-white sticky top-0 z-40 shadow-md px-4 py-3 flex items-center justify-between">
     <div class="flex items-center space-x-3">
       <img src="pondok.png" alt="Logo" onerror="this.src='https://placehold.co/80x80/059669/ffffff?text=Pondok'" class="w-10 h-10 rounded-full bg-white p-0.5 object-cover">
       <div>
-        <h1 class="text-base font-bold leading-tight">SIPM Terintegrasi</h1>
+        <h1 class="text-base font-bold leading-tight">Pembayaran Santri</h1>
         <p class="text-xs text-emerald-100" id="header-date">Memuat tanggal...</p>
       </div>
     </div>
@@ -79,10 +73,8 @@
     </div>
   </header>
 
-  <!-- MAIN CONTAINER -->
   <main class="p-4 max-w-md mx-auto">
 
-    <!-- 1. DASHBOARD SECTION -->
     <section id="sec-dashboard" class="space-y-4">
       <div class="bg-gradient-to-br from-emerald-600 to-teal-700 text-white p-5 rounded-2xl shadow-sm">
         <span class="text-xs text-emerald-100 uppercase tracking-wider block font-semibold">Total Pendapatan (2026)</span>
@@ -116,7 +108,6 @@
       </div>
     </section>
 
-    <!-- 2. DATA SANTRI SECTION -->
     <section id="sec-santri" class="space-y-4 hidden">
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-bold text-gray-800">Manajemen Data Santri</h2>
@@ -126,16 +117,16 @@
       </div>
       <div class="bg-white rounded-xl shadow-xs border border-gray-100 flex items-center px-3 py-2">
         <span class="material-icons text-gray-400 text-xl mr-2">search</span>
-        <input type="text" id="search-santri" oninput="renderSantri()" placeholder="Cari santri..." class="w-full bg-transparent text-sm focus:outline-hidden text-gray-700">
+        <input type="text" id="search-santri" oninput="renderSantri()" placeholder="Cari nama santri atau kamar..." class="w-full bg-transparent text-sm focus:outline-hidden text-gray-700">
       </div>
-      <div id="list-santri" class="space-y-2"></div>
+      <p class="text-[11px] text-gray-400 italic px-1">* Klik nama santri di tabel untuk melihat detail status iuran.</p>
+      
+      <div id="list-santri" class="w-full overflow-x-auto hide-scrollbar"></div>
     </section>
 
-    <!-- 3. PEMBAYARAN SECTION -->
     <section id="sec-pembayaran" class="space-y-4 hidden">
       <h2 class="text-lg font-bold text-gray-800">Transaksi Multi-Pembayaran</h2>
       
-      <!-- Pemilihan Santri -->
       <div class="bg-white p-4 rounded-xl shadow-xs border border-gray-100 space-y-3">
         <div class="grid grid-cols-2 gap-2">
           <div>
@@ -159,7 +150,6 @@
         </div>
       </div>
 
-      <!-- Builder Multi-Pilihan -->
       <div id="payment-builder-box" class="bg-white p-4 rounded-xl shadow-xs border border-gray-100 space-y-4 hidden">
         <div class="border-b border-gray-100 pb-2">
           <h3 class="text-sm font-bold text-gray-700 flex items-center">
@@ -182,17 +172,14 @@
           </div>
         </div>
 
-        <!-- Matrix Render Multi-Select Checkbox -->
         <div class="bg-gray-50 p-3 rounded-xl border border-gray-200">
           <span class="text-[11px] font-bold text-gray-500 uppercase block mb-2" id="matrix-title">Item Terbuka</span>
           <div id="matrix-container" class="grid grid-cols-2 gap-2 max-h-52 overflow-y-auto pr-1 hide-scrollbar"></div>
         </div>
 
-        <!-- Tampilan Keranjang Sementara Lintas Kategori/Jenis -->
         <div class="border-t border-gray-100 pt-3 space-y-2">
           <span class="text-[11px] font-bold text-gray-500 uppercase block">Ringkasan Keranjang Saat Ini:</span>
           <div id="keranjang-list-preview" class="space-y-1 max-h-28 overflow-y-auto hide-scrollbar text-xs">
-            <!-- Dinamis mendaftar item terpilih -->
             <p class="text-gray-400 italic text-[11px]">Belum ada item terpilih.</p>
           </div>
 
@@ -219,7 +206,6 @@
       </div>
     </section>
 
-    <!-- 4. RIWAYAT SECTION -->
     <section id="sec-riwayat" class="space-y-4 hidden">
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-bold text-gray-800">Riwayat Transaksi Buku</h2>
@@ -232,7 +218,6 @@
       <div id="list-riwayat" class="space-y-2"></div>
     </section>
 
-    <!-- 5. PENGATURAN BIAYA SECTION -->
     <section id="sec-pengaturan" class="space-y-4 hidden">
       <div class="flex items-center justify-between">
         <h2 class="text-lg font-bold text-gray-800">Master Konfigurasi Biaya</h2>
@@ -243,7 +228,6 @@
       <div id="list-biaya" class="space-y-2"></div>
     </section>
 
-    <!-- 6. BACKUP & RESTORE SECTION -->
     <section id="sec-backup" class="space-y-4 hidden">
       <h2 class="text-lg font-bold text-gray-800">Backup & Ekspor Data</h2>
       <div class="bg-white p-4 rounded-xl shadow-xs border border-gray-100 space-y-2">
@@ -258,16 +242,11 @@
           <span class="material-icons text-sm mr-2">grid_on</span>Cetak Laporan Excel
         </button>
       </div>
-      <div class="bg-red-50 p-4 rounded-xl border border-red-100">
-        <button onclick="clearSemuaDatabase()" class="bg-red-600 text-white text-[11px] px-3 py-2 rounded-lg font-bold w-full">
-          Reset Database Pabrik
-        </button>
-      </div>
+      
     </section>
 
   </main>
 
-  <!-- BOTTOM NAVIGATION BAR -->
   <nav class="bg-white border-t border-gray-200 fixed bottom-0 left-0 right-0 z-40 shadow-xl px-2 py-1 max-w-md mx-auto flex justify-around">
     <button onclick="switchTab('dashboard')" id="nav-dashboard" class="flex flex-col items-center justify-center text-emerald-600 py-1 px-2">
       <span class="material-icons text-xl">dashboard</span><span class="text-[10px] font-bold">Beranda</span>
@@ -289,8 +268,6 @@
     </button>
   </nav>
 
-  <!-- MODALS COMPONENTS -->
-  <!-- FORM SANTRI -->
   <div id="modal-santri" class="fixed inset-0 z-50 bg-black/50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl w-full max-w-sm p-5 space-y-4">
       <h3 id="modal-santri-title" class="text-sm font-bold text-gray-800">Form Data Santri</h3>
@@ -307,10 +284,10 @@
     </div>
   </div>
 
-  <!-- FORM MASTER BIAYA -->
   <div id="modal-biaya" class="fixed inset-0 z-50 bg-black/50 hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl w-full max-w-sm p-5 space-y-4">
-      <h3 class="text-sm font-bold text-gray-800">Tambah Kategori Master Biaya</h3>
+      <h3 id="modal-biaya-title" class="text-sm font-bold text-gray-800">Tambah Kategori Master Biaya</h3>
+      <input type="hidden" id="form-biaya-id">
       <div class="space-y-3">
         <select id="form-biaya-jenis" class="w-full bg-gray-50 border border-gray-200 text-xs rounded-lg p-2.5">
           <option value="PONDOK">PONDOK</option>
@@ -335,32 +312,41 @@
     </div>
   </div>
 
-  <!-- DISPLAY KWITANSI STRUK -->
   <div id="modal-kwitansi" class="fixed inset-0 z-50 bg-black/80 hidden flex flex-col items-center justify-center p-4 overflow-y-auto">
     <div class="bg-white p-2 rounded-xl mb-4 shadow-lg overflow-x-auto max-w-full">
       <div id="raw-kwitansi-print" class="receipt-container">
-        <div class="text-center border-b border-dashed border-gray-400 pb-2 mb-2">
-    <div class="flex flex-col items-center justify-center mb-1">
-        <img
-            src="pondok.png"
-            alt="Logo"
-            onerror="this.src='https://placehold.co/50x50/000000/ffffff?text=PP'"
-            class="w-10 h-10 rounded-full object-cover mb-1"
-        >
-
-        <spanclass="font-bold text-sm uppercase text-center leading-tight"
-            id="rec-pondok-nama">Ponpes & Madrasah Al Hidayat</span>
-    </div>
-
-    <p class="text-[10px]">Pembayaran Administrasi</p>
-</div>
-        <div class="space-y-0.5 text-[11px] border-b border-dashed border-gray-400 pb-2 mb-2">
-          <div>No Kwitansi: <span id="rec-no" class="font-bold"></span></div>
-          <div>Masehi    : <span id="rec-tgl-m"></span></div>
-          <div>Hijriyah  : <span id="rec-tgl-h" class="font-bold"></span></div>
-          <div>Santri    : <span id="rec-santri" class="font-bold"></span></div>
-          <div>Kamar/Kelas: <span id="rec-kamar-kelas"></span></div>
+        <div class="text-center border-b border-dashed border-gray-400 pb-2 mb-2 flex flex-col items-center justify-center">
+          <img src="pondok.png" alt="Logo" onerror="this.src='https://placehold.co/50x50/000000/ffffff?text=PP'" class="w-8 h-8 rounded-full object-cover mb-1 mx-auto">
+          <span class="font-bold text-sm uppercase block" id="rec-pondok-nama">Ponpes & Madrasah Al Hidayat</span>
+          <p class="text-[10px] mt-0.5">Pembayaran Administrasi</p>
         </div>
+        
+       <div class="space-y-0.5 text-[11px] border-b border-dashed border-gray-400 pb-2 mb-2">
+
+  <div class="grid grid-cols-[90px_10px_1fr]">
+    <span>No Kwitansi</span><span>:</span><span id="rec-no" class="font-bold"></span>
+  </div>
+
+  <div class="grid grid-cols-[90px_10px_1fr]">
+    <span>Masehi</span><span>:</span><span id="rec-tgl-m"></span>
+  </div>
+
+  <div class="grid grid-cols-[90px_10px_1fr]">
+    <span>Hijriyah</span><span>:</span>
+    <span id="rec-tgl-h" class="font-bold"></span>
+  </div>
+
+  <div class="grid grid-cols-[90px_10px_1fr]">
+    <span>Santri</span><span>:</span>
+    <span id="rec-santri" class="font-bold"></span>
+  </div>
+
+  <div class="grid grid-cols-[90px_10px_1fr]">
+    <span>Kamar/Kelas</span><span>:</span>
+    <span id="rec-kamar-kelas"></span>
+  </div>
+
+</div>
         <table class="w-full text-left text-[11px] border-b border-dashed border-gray-400 mb-2">
           <thead>
             <tr class="border-b border-gray-300">
@@ -371,19 +357,17 @@
           <tbody id="rec-items-tbody"></tbody>
         </table>
         <div class="text-right text-[11px] font-bold mb-2">TOTAL BAYAR: <span id="rec-total-tagihan"></span></div>
-        <div class="text-[10px] italic border-b border-dashed border-gray-400 pb-2 mb-2">Terbilang: <br><span id="rec-terbilang"></span></div>
+        <div class="text-[10px] italic border-b border-dashed border-gray-400 pb-2 mb-2">Terbilang: <span id="rec-terbilang"></span></div>
         
-        <!-- BAGIAN TANDA TANGAN DIUBAH (HANYA BENDAHARA) -->
-        <div class="flex justify-end text-center text-[10px] mt-4 pt-2">
-          <div class="w-32">
-            <p>Penerima</p>
-            <p id="rec-penerima-nama" class="font-bold"></p>
+        <div class="flex justify-end text-center text-[10px] mt-2">
+          <div class="w-36 border-t border-transparent">
+            <p class="mb-1">Penerima</p>
+            <p id="rec-penerima-nama" class="font-bold underline"></p>
           </div>
         </div>
       </div>
     </div>
     
-    <!-- FITUR TOMBOL DIUBAH MENJADI CETAK -->
     <div class="w-full max-w-sm grid grid-cols-3 gap-2">
       <button onclick="window.print()" class="bg-blue-600 text-white font-bold p-2.5 rounded-xl text-xs flex flex-col items-center justify-center active:scale-95 transition-transform">
         <span class="material-icons text-lg mb-0.5">print</span>Cetak Kwitansi
@@ -488,7 +472,7 @@
       document.getElementById('dash-today-trx').innerText = `${DB_RIWAYAT.filter(t => t.tglMasehi === hariIniStr).length} Trx`;
     }
 
-    // SANTRI CRUD
+    // SANTRI CRUD & RENDER INTEGRASI DENGAN TABEL ACCORDION EXPANDABLE
     function openModalSantri(id = '') {
       document.getElementById('modal-santri').classList.remove('hidden');
       if(id) {
@@ -519,56 +503,228 @@
       }
       saveSemuaKeStorage(); closeModalSantri(); renderSantri(); isiDropdownFilterPembayaran();
     }
-    function hapusSantri(id) { if(confirm("Hapus santri?")) { DB_SANTRI = DB_SANTRI.filter(s => s.id !== id); saveSemuaKeStorage(); renderSantri(); isiDropdownFilterPembayaran(); } }
+    function hapusSantri(id) { if(confirm("Hapus data santri ini?")) { DB_SANTRI = DB_SANTRI.filter(s => s.id !== id); saveSemuaKeStorage(); renderSantri(); isiDropdownFilterPembayaran(); } }
+    
+    // FUNGSI RENDER TABEL DATA SANTRI TERBARU
     function renderSantri() {
       const kw = document.getElementById('search-santri').value.toLowerCase();
-      const listEl = document.getElementById('list-santri'); listEl.innerHTML = '';
-      DB_SANTRI.filter(s => s.nama.toLowerCase().includes(kw) || s.kamar.toLowerCase().includes(kw)).forEach(s => {
-        const div = document.createElement('div');
-        div.className = "bg-white p-3 rounded-xl shadow-xs border flex items-center justify-between";
-        div.innerHTML = `<div><h4 class="text-xs font-bold">${s.nama}</h4><p class="text-[11px] text-gray-400">${s.kamar} / ${s.kelas}</p></div>
-          <div class="flex space-x-1"><button onclick="openModalSantri('${s.id}')" class="text-emerald-600 bg-emerald-50 p-1.5 rounded-lg"><span class="material-icons text-xs">edit</span></button>
-          <button onclick="hapusSantri('${s.id}')" class="text-red-600 bg-red-50 p-1.5 rounded-lg"><span class="material-icons text-xs">delete</span></button></div>`;
-        listEl.appendChild(div);
+      const listEl = document.getElementById('list-santri'); 
+      
+      listEl.innerHTML = `
+        <div class="bg-white rounded-xl shadow-xs border border-gray-200 overflow-hidden">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-gray-100 text-gray-600 font-bold border-b border-gray-200">
+                <th class="p-3">Nama Santri (Klik)</th>
+                <th class="p-3">Kamar</th>
+                <th class="p-3">Kelas</th>
+                <th class="p-3 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-santri-table"></tbody>
+          </table>
+        </div>
+      `;
+
+      const tbody = document.getElementById('tbody-santri-table');
+      const santriSaring = DB_SANTRI.filter(s => s.nama.toLowerCase().includes(kw) || s.kamar.toLowerCase().includes(kw));
+
+      if (santriSaring.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-400 italic">Data tidak ditemukan</td></tr>`;
+        return;
+      }
+
+      santriSaring.forEach(s => {
+        const trUtama = document.createElement('tr');
+        trUtama.className = "border-b border-gray-100 hover:bg-gray-50/80 transition-colors";
+        trUtama.innerHTML = `
+          <td onclick="toggleDetailIuranTabel('${s.id}')" class="p-3 font-bold text-emerald-700 cursor-pointer hover:underline flex items-center space-x-1">
+            <span class="material-icons text-xs text-gray-400" id="icon-arrow-${s.id}">keyboard_arrow_right</span>
+            <span>${s.nama}</span>
+          </td>
+          <td class="p-3 text-gray-600">${s.kamar}</td>
+          <td class="p-3 text-gray-600">${s.kelas}</td>
+          <td class="p-3 text-center space-x-1 whitespace-nowrap">
+            <button onclick="openModalSantri('${s.id}')" class="text-emerald-600 bg-emerald-50 p-1 rounded-md"><span class="material-icons text-xs">edit</span></button>
+            <button onclick="hapusSantri('${s.id}')" class="text-red-600 bg-red-50 p-1 rounded-md"><span class="material-icons text-xs">delete</span></button>
+          </td>
+        `;
+        
+        const trDetail = document.createElement('tr');
+        trDetail.id = `row-detail-${s.id}`;
+        trDetail.className = "bg-gray-50/50 hidden border-b border-gray-200";
+        trDetail.innerHTML = `
+          <td colspan="4" class="p-3 pl-7">
+            <div class="grid grid-cols-2 gap-4 text-[11px]">
+              <div class="bg-white p-2.5 rounded-lg border border-gray-200 shadow-xs">
+                <span class="text-[9px] font-black tracking-wider text-blue-600 uppercase bg-blue-50 px-1.5 py-0.5 rounded block w-max mb-2">Iuran Pondok</span>
+                <div id="tabel-iuran-pondok-${s.id}" class="space-y-1.5"></div>
+              </div>
+              <div class="bg-white p-2.5 rounded-lg border border-gray-200 shadow-xs">
+                <span class="text-[9px] font-black tracking-wider text-purple-600 uppercase bg-purple-50 px-1.5 py-0.5 rounded block w-max mb-2">Iuran Madrasah</span>
+                <div id="tabel-iuran-madrasah-${s.id}" class="space-y-1.5"></div>
+              </div>
+            </div>
+          </td>
+        `;
+
+        tbody.appendChild(trUtama);
+        tbody.appendChild(trDetail);
       });
     }
 
-    // MASTER BIAYA LOGIC
-    function openModalBiaya() {
-      document.getElementById('form-biaya-kategori').value = '';
-      const containerBulan = document.getElementById('container-inputs-bulan'); containerBulan.innerHTML = '';
-      DAFTAR_BULAN_HIJRIYAH.forEach(b => {
-        containerBulan.innerHTML += `<div class="flex items-center justify-between space-x-2"><span class="text-xs text-gray-600 w-24">${b}</span>
-          <input type="number" data-bulan="${b}" value="250000" class="input-nominal-bulan w-full bg-gray-50 border text-xs rounded-md p-1 font-bold"></div>`;
-      });
-      toggleFormBiayaNominal(); document.getElementById('modal-biaya').classList.remove('hidden');
+    // MEMBUKA / MENUTUP ISI IURAN LANGSUNG DI BAWAH NAMA PADA BARIS TABEL
+    function toggleDetailIuranTabel(santriId) {
+      const rowDetail = document.getElementById(`row-detail-${santriId}`);
+      const iconArrow = document.getElementById(`icon-arrow-${santriId}`);
+      const santri = DB_SANTRI.find(s => s.id === santriId);
+      
+      if (!rowDetail || !santri) return;
+
+      if (rowDetail.classList.contains('hidden')) {
+        rowDetail.classList.remove('hidden');
+        iconArrow.innerText = "keyboard_arrow_down";
+        iconArrow.className = "material-icons text-xs text-emerald-600";
+        
+        const boxPondok = document.getElementById(`tabel-iuran-pondok-${santriId}`);
+        const boxMadrasah = document.getElementById(`tabel-iuran-madrasah-${santriId}`);
+        boxPondok.innerHTML = ''; boxMadrasah.innerHTML = '';
+
+        if (DB_BIAYA.length === 0) {
+          boxPondok.innerHTML = `<p class="text-gray-400 italic">Belum ada master biaya.</p>`;
+          boxMadrasah.innerHTML = `<p class="text-gray-400 italic">Belum ada master biaya.</p>`;
+          return;
+        }
+
+        DB_BIAYA.forEach(b => {
+          let targetBox = b.jenis === 'PONDOK' ? boxPondok : boxMadrasah;
+          let divKategori = document.createElement('div');
+          divKategori.className = "border-b border-gray-100 pb-1.5 last:border-0";
+          divKategori.innerHTML = `<p class="font-bold text-gray-700 text-[10px] mb-1">${b.kategori} (${b.tipe})</p>`;
+          
+          let gridSub = document.createElement('div');
+          gridSub.className = "grid grid-cols-3 gap-1 text-[10px]";
+
+          if (b.tipe === 'Tahunan') {
+            const lunas = cekApakahSudahLunas(santri.nama, b.jenis, b.kategori, 'Tahunan');
+            gridSub.innerHTML = `
+              <div class="col-span-3 flex justify-between items-center bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
+                <span class="text-gray-500">Biaya Tahunan</span>
+                <span class="font-bold ${lunas ? 'text-green-600' : 'text-amber-600'}">${lunas ? 'LUNAS' : 'BELUM BAYAR'}</span>
+              </div>`;
+          } else {
+            b.detailBulanan.forEach(mb => {
+              const lunas = cekApakahSudahLunas(santri.nama, b.jenis, b.kategori, mb.bulan);
+              gridSub.innerHTML += `
+                <div class="flex flex-col justify-center items-center p-1 rounded border text-center ${lunas ? 'bg-green-50/50 border-green-200 text-green-700' : 'bg-gray-50 border-gray-100 text-gray-400'}">
+                  <span class="font-semibold block text-[9px] truncate w-full">${mb.bulan}</span>
+                  <span class="text-[8px] font-bold">${lunas ? 'Lunas' : '-'}</span>
+                </div>`;
+            });
+          }
+          
+          divKategori.appendChild(gridSub);
+          targetBox.appendChild(divKategori);
+        });
+
+        if (boxPondok.innerHTML === '') boxPondok.innerHTML = '<p class="text-gray-400 italic">Tidak ada.</p>';
+        if (boxMadrasah.innerHTML === '') boxMadrasah.innerHTML = '<p class="text-gray-400 italic">Tidak ada.</p>';
+      } else {
+        rowDetail.classList.add('hidden');
+        iconArrow.innerText = "keyboard_arrow_right";
+        iconArrow.className = "material-icons text-xs text-gray-400";
+      }
     }
+
+    // MASTER BIAYA LOGIC
+    function openModalBiaya(id = '') {
+      const titleEl = document.getElementById('modal-biaya-title');
+      const containerBulan = document.getElementById('container-inputs-bulan');
+      
+      if(id) {
+        titleEl.innerText = "Edit Kategori Master Biaya";
+        const b = DB_BIAYA.find(item => item.id === id);
+        document.getElementById('form-biaya-id').value = b.id;
+        document.getElementById('form-biaya-jenis').value = b.jenis;
+        document.getElementById('form-biaya-kategori').value = b.kategori;
+        document.getElementById('form-biaya-tipe').value = b.tipe;
+        
+        if(b.tipe === 'Tahunan') {
+          document.getElementById('form-biaya-nominal-flat').value = b.nominal || 0;
+        } else {
+          containerBulan.innerHTML = '';
+          DAFTAR_BULAN_HIJRIYAH.forEach(bln => {
+            const dataBulanExist = b.detailBulanan.find(db => db.bulan === bln) || { nominal: 0 };
+            containerBulan.innerHTML += `<div class="flex items-center justify-between space-x-2"><span class="text-xs text-gray-600 w-24">${bln}</span>
+              <input type="number" data-bulan="${bln}" value="${dataBulanExist.nominal}" class="input-nominal-bulan w-full bg-gray-50 border text-xs rounded-md p-1 font-bold"></div>`;
+          });
+        }
+      } else {
+        titleEl.innerText = "Tambah Kategori Master Biaya";
+        document.getElementById('form-biaya-id').value = '';
+        document.getElementById('form-biaya-kategori').value = '';
+        document.getElementById('form-biaya-tipe').value = 'Bulanan';
+        document.getElementById('form-biaya-nominal-flat').value = '0';
+        
+        containerBulan.innerHTML = '';
+        DAFTAR_BULAN_HIJRIYAH.forEach(bln => {
+          containerBulan.innerHTML += `<div class="flex items-center justify-between space-x-2"><span class="text-xs text-gray-600 w-24">${bln}</span>
+            <input type="number" data-bulan="${bln}" value="250000" class="input-nominal-bulan w-full bg-gray-50 border text-xs rounded-md p-1 font-bold"></div>`;
+        });
+      }
+      
+      toggleFormBiayaNominal();
+      document.getElementById('modal-biaya').classList.remove('hidden');
+    }
+
     function closeModalBiaya() { document.getElementById('modal-biaya').classList.add('hidden'); }
+    
     function toggleFormBiayaNominal() {
       const t = document.getElementById('form-biaya-tipe').value;
       document.getElementById('box-form-nominal-tahunan').className = t === 'Tahunan' ? '' : 'hidden';
       document.getElementById('box-form-nominal-bulanan').className = t === 'Bulanan' ? 'space-y-2' : 'hidden';
     }
+
     function simpanMasterBiaya() {
-      const jenis = document.getElementById('form-biaya-jenis').value, kategori = document.getElementById('form-biaya-kategori').value.trim(), tipe = document.getElementById('form-biaya-tipe').value;
+      const id = document.getElementById('form-biaya-id').value;
+      const jenis = document.getElementById('form-biaya-jenis').value;
+      const kategori = document.getElementById('form-biaya-kategori').value.trim();
+      const tipe = document.getElementById('form-biaya-tipe').value;
+      
       if(!kategori) return alert("Wajib isi kategori!");
-      let b = { id: 'B-' + Date.now(), jenis, kategori, tipe };
-      if(tipe === 'Tahunan') { b.nominal = Number(document.getElementById('form-biaya-nominal-flat').value || 0); }
-      else {
-        b.detailBulanan = [];
-        document.querySelectorAll('.input-nominal-bulan').forEach(inp => { b.detailBulanan.push({ bulan: inp.getAttribute('data-bulan'), nominal: Number(inp.value || 0) }); });
+      
+      let payloadBiaya = { id: id ? id : 'B-' + Date.now(), jenis, kategori, tipe };
+      if(tipe === 'Tahunan') {
+        payloadBiaya.nominal = Number(document.getElementById('form-biaya-nominal-flat').value || 0);
+      } else {
+        payloadBiaya.detailBulanan = [];
+        document.querySelectorAll('.input-nominal-bulan').forEach(inp => {
+          payloadBiaya.detailBulanan.push({ bulan: inp.getAttribute('data-bulan'), nominal: Number(inp.value || 0) });
+        });
       }
-      DB_BIAYA.push(b); saveSemuaKeStorage(); closeModalBiaya(); renderMasterBiaya();
+
+      if(id) {
+        const idx = DB_BIAYA.findIndex(b => b.id === id);
+        if(idx !== -1) DB_BIAYA[idx] = payloadBiaya;
+      } else {
+        DB_BIAYA.push(payloadBiaya);
+      }
+      
+      saveSemuaKeStorage(); closeModalBiaya(); renderMasterBiaya();
     }
+
     function renderMasterBiaya() {
       const le = document.getElementById('list-biaya'); le.innerHTML = '';
       DB_BIAYA.forEach(b => {
         le.innerHTML += `<div class="bg-white p-3 rounded-xl border flex justify-between items-center"><div><span class="text-[9px] font-bold px-1.5 py-0.5 rounded ${b.jenis==='PONDOK'?'bg-blue-100 text-blue-800':'bg-purple-100 text-purple-800'}">${b.jenis}</span>
           <h4 class="text-xs font-bold inline ml-1">${b.kategori}</h4><p class="text-[11px] text-gray-400">${b.tipe} (${b.tipe==='Tahunan'?formatRupiah(b.nominal):'Multi-Tarif'})</p></div>
-          <button onclick="hapusMasterBiaya('${b.id}')" class="text-red-500"><span class="material-icons text-xs">delete</span></button></div>`;
+          <div class="flex space-x-1">
+            <button onclick="openModalBiaya('${b.id}')" class="text-emerald-600 bg-emerald-50 p-1.5 rounded-lg"><span class="material-icons text-xs">edit</span></button>
+            <button onclick="hapusMasterBiaya('${b.id}')" class="text-red-500 bg-red-50 p-1.5 rounded-lg"><span class="material-icons text-xs">delete</span></button>
+          </div></div>`;
       });
     }
-    function hapusMasterBiaya(id) { if(confirm("Hapus?")) { DB_BIAYA = DB_BIAYA.filter(b => b.id !== id); saveSemuaKeStorage(); renderMasterBiaya(); } }
+    function hapusMasterBiaya(id) { if(confirm("Hapus master biaya ini?")) { DB_BIAYA = DB_BIAYA.filter(b => b.id !== id); saveSemuaKeStorage(); renderMasterBiaya(); } }
 
     // PEMBAYARAN MULTI-SELECT MATRIX LOGIC
     function isiDropdownFilterPembayaran() {
@@ -725,31 +881,21 @@
     
     function closeModalKwitansi() { document.getElementById('modal-kwitansi').classList.add('hidden'); }
 
-    // FUNGSI AKSI: DOWNLOAD KUALITAS TINGGI (HD) & SHARE WHATSAPP TERCANTUM BERSAMA
     function shareKeWhatsAppDanUnduh() {
       const nTarget = document.getElementById('raw-kwitansi-print');
       
-      // Mengubah parameter ekspor ke Kualitas Tinggi (HD) dengan menaikkan pixelRatio
       htmlToImage.toPng(nTarget, { 
         bgcolor: '#ffffff',
-        pixelRatio: 3, // Skala perbesaran kerapatan piksel agar gambar tajam anti-pecah
-        style: {
-          transform: 'scale(1)',
-          transformOrigin: 'top left'
-        }
+        pixelRatio: 3, 
+        style: { transform: 'scale(1)', transformOrigin: 'top left' }
       }).then(url => {
-        // Otomatis Mengunduh File Gambar Terlebih Dahulu
         const a = document.createElement('a'); 
         a.download = `Kwitansi_HD_${GLOBAL_SELECTED_KWITANSI.namaSantri.replace(/\s+/g, '_')}_${GLOBAL_SELECTED_KWITANSI.noKwitansi}.png`; 
-        a.href = url; 
-        a.click();
+        a.href = url; a.click();
         
-        // Membuka Teks Api Ringkasan Transaksi Ke WhatsApp
         let m = `*BUKTI PEMBAYARAN LUNAS*\nNo: ${GLOBAL_SELECTED_KWITANSI.noKwitansi}\nSantri: ${GLOBAL_SELECTED_KWITANSI.namaSantri}\nTotal: ${formatRupiah(GLOBAL_SELECTED_KWITANSI.total)}\n\n_File kwitansi gambar HD telah terunduh otomatis ke perangkat Anda._\nTerima Kasih.`;
         window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(m)}`, '_blank');
-      }).catch(err => {
-        console.error("Gagal memproses gambar kualitas tinggi", err);
-      });
+      }).catch(err => console.error("Gagal memproses gambar", err));
     }
 
     function renderRiwayat() {
@@ -769,7 +915,7 @@
     }
     function hapusTransaksi(no) { if(confirm("Hapus transaksi?")) { DB_RIWAYAT = DB_RIWAYAT.filter(r => r.noKwitansi !== no); saveSemuaKeStorage(); renderRiwayat(); renderDashboard(); } }
 
-    // EXPORTS
+    // BACKUP MANAGEMENT SYSTEM
     function exportJSONData() {
       const s = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ PP_SANTRI: DB_SANTRI, DB_BIAYA, DB_RIWAYAT }));
       const a = document.createElement('a'); a.setAttribute("href", s); a.setAttribute("download", "BACKUP_SIPM.json"); a.click();
@@ -785,41 +931,25 @@
       let rows = []; DB_RIWAYAT.forEach(t => t.items.forEach(i => rows.push({ "No Kwitansi": t.noKwitansi, "Tanggal": t.tglMasehi, "Santri": t.namaSantri, "Kamar": t.kamar, "Jenis": i.jenis, "Kategori": i.kategori, "Periode": i.bulan, "Nominal": i.harga, "Kasir": t.penerima })));
       const ws = XLSX.utils.json_to_sheet(rows), wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Laporan"); XLSX.writeFile(wb, "LAPORAN_SIPM.xlsx");
     }
-    function clearSemuaDatabase() { if(confirm("Reset total?")) { localStorage.clear(); window.location.reload(); } }
+    
+    
     function formatRupiah(v) { return 'Rp' + Number(v).toLocaleString('id-ID'); }
+    
+    // UTILITY TERBILANG
     function convertAngkaKeTerbilang(nilai) {
-    const bil = [
-        "", "Satu", "Dua", "Tiga", "Empat",
-        "Lima", "Enam", "Tujuh", "Delapan",
-        "Sembilan", "Sepuluh", "Sebelas"
-    ];
-
-    let t = "";
-    let n = Math.floor(nilai);
-
-    if (n < 12)
-        t = " " + bil[n];
-    else if (n < 20)
-        t = convertAngkaKeTerbilang(n - 10) + " Belas";
-    else if (n < 100)
-        t = convertAngkaKeTerbilang(Math.floor(n / 10)) + " Puluh" + convertAngkaKeTerbilang(n % 10);
-    else if (n < 200)
-        t = " Seratus" + convertAngkaKeTerbilang(n - 100);
-    else if (n < 1000)
-        t = convertAngkaKeTerbilang(Math.floor(n / 100)) + " Ratus" + convertAngkaKeTerbilang(n % 100);
-    else if (n < 2000)
-        t = " Seribu" + convertAngkaKeTerbilang(n - 1000);
-    else if (n < 1000000)
-        t = convertAngkaKeTerbilang(Math.floor(n / 1000)) + " Ribu" + convertAngkaKeTerbilang(n % 1000);
-    else if (n < 1000000000)
-        t = convertAngkaKeTerbilang(Math.floor(n / 1000000)) + " Juta" + convertAngkaKeTerbilang(n % 1000000);
-    else if (n < 1000000000000)
-        t = convertAngkaKeTerbilang(Math.floor(n / 1000000000)) + " Milyar" + convertAngkaKeTerbilang(n % 1000000000);
-    else
-        t = "Nilai terlalu besar";
-
-    return t.trim();
-}
+      const bil = ["", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas"];
+      let n = Math.floor(nilai);
+      if (n < 12) return " " + bil[n];
+      else if (n < 20) return convertAngkaKeTerbilang(n - 10) + " Belas";
+      else if (n < 100) return convertAngkaKeTerbilang(Math.floor(n / 10)) + " Puluh" + convertAngkaKeTerbilang(n % 10);
+      else if (n < 200) return " Seratus" + convertAngkaKeTerbilang(n - 100);
+      else if (n < 1000) return convertAngkaKeTerbilang(Math.floor(n / 100)) + " Ratus" + convertAngkaKeTerbilang(n % 100);
+      else if (n < 2000) return " Seribu" + convertAngkaKeTerbilang(n - 1000);
+      else if (n < 1000000) return convertAngkaKeTerbilang(Math.floor(n / 1000)) + " Ribu" + convertAngkaKeTerbilang(n % 1000);
+      else if (n < 1000000000) return convertAngkaKeTerbilang(Math.floor(n / 1000000)) + " Juta" + convertAngkaKeTerbilang(n % 1000000);
+      else if (n < 1000000000000) return convertAngkaKeTerbilang(Math.floor(n / 1000000000)) + " Milyar" + convertAngkaKeTerbilang(n % 1000000000);
+      return "";
+    }
   </script>
 </body>
 </html>
